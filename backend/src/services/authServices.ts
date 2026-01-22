@@ -2,7 +2,7 @@ import {UserModel} from '../models/userModel';
 import { AuthUtils } from '../utils/authUtils';
 import { RegisterRequest, LoginResquest, UserResponse,  User} from '../types';
 
-export class AuthServices{
+export class AuthService {
     static async register(data: RegisterRequest): Promise<{user: UserResponse; token:string}> {
         const {email, password, name}= data;
 
@@ -11,7 +11,7 @@ export class AuthServices{
             throw new Error('Email already registered');
         }
 
-        const hashPassword=await AuthUtils.hashPassword(password);
+        const hashPassword= await AuthUtils.hashPassword(password);
 
         const user= await UserModel.create(email,hashPassword,name);
 

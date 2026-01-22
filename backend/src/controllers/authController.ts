@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AuthServices } from "../services/authServices";
+import { AuthService } from "../services/authServices";
 import { RegisterRequest, LoginResquest } from "../types";
 
 export class AuthController {
@@ -7,7 +7,7 @@ export class AuthController {
         try {
             const data = req.body as RegisterRequest;
 
-            const { user, token } = await AuthServices.register(data);
+            const { user, token } = await AuthService.register(data);
 
             res.cookie('token', token, {
                 httpOnly: true,
@@ -28,7 +28,6 @@ export class AuthController {
             }
 
             res.status(500).json({ error: 'Server error' });
-
         }
     }
 
@@ -36,7 +35,7 @@ export class AuthController {
         try {
             const data = req.body as LoginResquest;
 
-            const { user, token } = await AuthServices.login(data);
+            const { user, token } = await AuthService.login(data);
 
             res.cookie('token', token, {
                 httpOnly: true,
@@ -68,7 +67,7 @@ export class AuthController {
             if (!userId) {
                 return res.status(401).json({ error: 'Not authenticated' });
             }
-            const user = await AuthServices.getUserById(userId);
+            const user = await AuthService.getUserById(userId);
             res.json({ user });
 
         } catch (error) {
