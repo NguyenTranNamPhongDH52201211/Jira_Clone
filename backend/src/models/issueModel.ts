@@ -36,7 +36,7 @@ export class IssueModel {
                                         FROM issues i JOIN users u ON i.reporter_id=u.user_id
                                                       LEFT JOIN users a ON i.assignee_id=a.user_id
                                                       LEFT JOIN epics e ON i.epic_id= e.epic_id
-                                                      LEFT JOIN sprint s ON i.sprint_id = s.sprint_id 
+                                                      LEFT JOIN sprints s ON i.sprint_id = s.sprint_id 
                                         WHERE i.issue_id = $1`, [issueId]);
         return result.rows[0] || null;
     }
@@ -67,10 +67,11 @@ export class IssueModel {
 
     static async getNextIssueNumber(projectId: number): Promise<number> {
         const result = await pool.query(
-            `SELECT COUNT(*) as count FROM issues WHERE project_id = $1`,
+            `SELECT MAX(CAST(SPLIT_PART(issue_key, '-', 2) AS INTEGER)) as max_num 
+         FROM issues WHERE project_id = $1`,
             [projectId]
         );
-        return parseInt(result.rows[0].count) + 1;
+        return (result.rows[0].max_num ?? 0) + 1;
     }
 
     static async update(issueId: number,
@@ -132,7 +133,7 @@ export class IssueModel {
             paramCount++;
         }
 
-        
+
         if (data.sprintId !== undefined) {
             updates.push(`sprint_id = $${paramCount}`);
             values.push(data.sprintId);

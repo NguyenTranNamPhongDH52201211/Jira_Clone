@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import BoardPage from './BoardPage';
+import BacklogPage from './BacklogPage';
 
 
 export default function ProjectDetailPage() {
@@ -39,7 +40,7 @@ export default function ProjectDetailPage() {
             {/*Main content*/}
             <div className="flex-1 p-8">
                 {activeTab === 'board' && <BoardPage />}
-                {activeTab === 'backlog' && <div>Backlog Page</div>}
+                {activeTab === 'backlog' && <BacklogPage />}
                 {activeTab === 'members' && <div>Members Page</div>}
             </div>
 
